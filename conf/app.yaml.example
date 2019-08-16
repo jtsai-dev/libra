@@ -1,0 +1,31 @@
+App:
+  TokenExpiredSeconds: 7200
+  PageSize: 10
+  ImageSavePath: upload/images/
+  ImageMaxSize: 5
+  ImageAllowExts: 
+    - .jpg
+    - .jpeg
+    - .png
+  ExportPath: export/
+Wechat: 
+  AppId: xxx
+  AppSecret: xxx
+  DefaultAvatar: http://xxx.com/xxx.jpg
+Server:
+  RunMode: debug  # it will show origin error in 'debug' mode 
+  Port: 9090
+Database:
+  Type: mysql
+  User: root
+  Password: xxx
+  Host: 127.0.0.1:3600
+  Name: libra
+  Charset: utf8mb4
+Redis:
+  Address: 127.0.0.1:6379
+  Password: xxx
+  DBIndex: 0
+Log:
+  Path: logs/
+  TimestampFormat: 15:04:05.000
