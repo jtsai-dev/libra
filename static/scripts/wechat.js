@@ -1,6 +1,6 @@
 const
-    appId = 'xxx'
-apiHost = 'http://xxx.com/api/'
+    appId = 'wxb3570a17c3112439'
+apiHost = 'http://118.24.237.125/libra/api/'
 host = window.location.href
 tokenKey = 'token'
 

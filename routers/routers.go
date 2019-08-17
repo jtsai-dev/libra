@@ -61,5 +61,5 @@ func Regist(router *gin.Engine) {
 	}
 
 	// swagger
-	router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
