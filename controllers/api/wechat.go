@@ -17,10 +17,10 @@ import (
 	"time"
 
 	"libra/models"
-	"libra/pkg"
+	"libra/pkg/conf"
 	"libra/pkg/enums"
-	"libra/pkg/randomUtils"
-	"libra/pkg/wechatUtils"
+	"libra/pkg/random"
+	"libra/pkg/wechat"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -44,7 +44,7 @@ func Wechat_Get(context *gin.Context) {
 func Wechat_Post(context *gin.Context) {
 
 	go func(context *gin.Context) {
-		var in wechatUtils.WxEvent
+		var in wechat.WxEvent
 
 		if err := context.ShouldBindBodyWith(&in, binding.XML); err != nil {
 
@@ -69,17 +69,17 @@ func Wechat_Post(context *gin.Context) {
 	context.String(200, "")
 }
 
-func wxEventHandle(in *wechatUtils.WxEvent) {
+func wxEventHandle(in *wechat.WxEvent) {
 	switch in.Event {
 	case "subscribe", "unsubscribe":
 		wxSubscribeHandle(in)
 	}
 }
 
-func wxSubscribeHandle(in *wechatUtils.WxEvent) {
-	wxClient := &wechatUtils.Client{
-		AppId:     pkg.Configs.Wechat.AppId,
-		AppSecret: pkg.Configs.Wechat.AppSecret,
+func wxSubscribeHandle(in *wechat.WxEvent) {
+	wxClient := &wechat.Client{
+		AppId:     conf.Configs.Wechat.AppId,
+		AppSecret: conf.Configs.Wechat.AppSecret,
 	}
 
 	has, _ := models.X.Exist(&models.WxAccount{
@@ -113,7 +113,7 @@ func wxSubscribeHandle(in *wechatUtils.WxEvent) {
 			entity.City = wxUserInfo.City
 
 			if len(entity.Avatar) < 1 {
-				entity.Avatar = pkg.Configs.Wechat.DefaultAvatar
+				entity.Avatar = conf.Configs.Wechat.DefaultAvatar
 			}
 		}
 	} else {
@@ -142,12 +142,12 @@ func wxSubscribeHandle(in *wechatUtils.WxEvent) {
 }
 
 func WechatJsTicket_Get(context *gin.Context) {
-	wxClient := &wechatUtils.Client{
-		AppId:     pkg.Configs.Wechat.AppId,
-		AppSecret: pkg.Configs.Wechat.AppSecret,
+	wxClient := &wechat.Client{
+		AppId:     conf.Configs.Wechat.AppId,
+		AppSecret: conf.Configs.Wechat.AppSecret,
 	}
 
-	noncestr := randomUtils.String(16)
+	noncestr := random.String(16)
 	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
 
 	var url string

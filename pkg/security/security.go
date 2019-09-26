@@ -1,4 +1,4 @@
-package stringUtils
+package security
 
 import (
 	"crypto/md5"

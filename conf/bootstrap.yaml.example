@@ -1,0 +1,10 @@
+Nacos:
+  ServerAddr: localhost
+  ServerPort: 8848
+  DataId: dataId
+  Group: group
+  Tenant: xxxx
+  Extension: yaml
+  LogDir: logs
+  TimeoutMs: 5000
+  ListenInterval: 10000

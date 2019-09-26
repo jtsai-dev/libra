@@ -17,7 +17,7 @@ import (
 	"libra/models"
 	"libra/models/constants"
 	"libra/pkg/enums"
-	"libra/pkg/jsonUtils"
+	"libra/pkg/mapper"
 	"libra/pkg/redisUtils"
 
 	"github.com/gin-gonic/gin"
@@ -51,7 +51,7 @@ func AuthHandle() gin.HandlerFunc {
 			unAuthHandle(c)
 		}
 		var wxAccount models.WxAccount
-		jsonUtils.ToObject(value, &wxAccount)
+		mapper.ToObject(value, &wxAccount)
 
 		if wxAccount.Id != id {
 			unAuthHandle(c)

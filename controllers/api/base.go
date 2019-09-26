@@ -10,7 +10,7 @@ package api
 
 import (
 	"libra/models"
-	"libra/pkg"
+	"libra/pkg/conf"
 
 	"github.com/gin-gonic/gin"
 )
@@ -35,13 +35,13 @@ func GetPageInfo(c *gin.Context) (pageIndex, pageSize int) {
 	err := c.Bind(&pageInfo)
 	if err != nil {
 		pageInfo.PageIndex = 1
-		pageInfo.PageIndex = pkg.Configs.App.PageSize
+		pageInfo.PageIndex = conf.Configs.App.PageSize
 	}
 	if pageInfo.PageIndex == 0 {
 		pageInfo.PageIndex = 1
 	}
 	if pageInfo.PageSize == 0 {
-		pageInfo.PageSize = pkg.Configs.App.PageSize
+		pageInfo.PageSize = conf.Configs.App.PageSize
 	}
 	return pageInfo.PageIndex, pageInfo.PageSize
 }

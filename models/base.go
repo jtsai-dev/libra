@@ -11,7 +11,7 @@ package models
 import (
 	"fmt"
 
-	"libra/pkg"
+	"libra/pkg/conf"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
@@ -36,7 +36,7 @@ func Setup() {
 		err                                           error
 		dbType, dbName, user, password, host, charset string
 	)
-	dbSetting := pkg.Configs.Database
+	dbSetting := conf.Configs.Database
 
 	dbType = dbSetting.Type
 	dbName = dbSetting.Name
@@ -58,7 +58,7 @@ func Setup() {
 		log.Error(err)
 	}
 
-	if pkg.Configs.Server.RunMode == "debug" {
+	if conf.Configs.Server.RunMode == "debug" {
 		X.ShowSQL(true)
 	}
 }

@@ -12,7 +12,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"libra/pkg"
+	"libra/pkg/conf"
 
 	"github.com/go-redis/redis"
 	log "github.com/sirupsen/logrus"
@@ -23,9 +23,9 @@ var client *redis.Client
 func Instance() *redis.Client {
 	if client == nil {
 		client = redis.NewClient(&redis.Options{
-			Addr:     pkg.Configs.Redis.Address,
-			Password: pkg.Configs.Redis.Password,
-			DB:       pkg.Configs.Redis.DBIndex,
+			Addr:     conf.Configs.Redis.Address,
+			Password: conf.Configs.Redis.Password,
+			DB:       conf.Configs.Redis.DBIndex,
 		})
 		_, err := client.Ping().Result()
 		if err != nil {

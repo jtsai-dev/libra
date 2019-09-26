@@ -6,7 +6,7 @@
  * @LastEditors: yyeiei
  * @LastEditTime: 2019-08-15 11:29:50
  */
-package wechatUtils
+package wechat
 
 type Client struct {
 	AppId     string

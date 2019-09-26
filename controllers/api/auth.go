@@ -16,11 +16,11 @@ import (
 
 	"libra/models"
 	"libra/models/constants"
-	"libra/pkg"
+	"libra/pkg/conf"
 	"libra/pkg/enums"
-	"libra/pkg/randomUtils"
+	"libra/pkg/random"
 	"libra/pkg/redisUtils"
-	"libra/pkg/wechatUtils"
+	"libra/pkg/wechat"
 
 	"github.com/gin-gonic/gin"
 )
@@ -37,9 +37,9 @@ func WxSession_Get(context *gin.Context) {
 		panic(enums.ParamsInvalid)
 	}
 
-	wxClient := &wechatUtils.Client{
-		AppId:     pkg.Configs.Wechat.AppId,
-		AppSecret: pkg.Configs.Wechat.AppSecret,
+	wxClient := &wechat.Client{
+		AppId:     conf.Configs.Wechat.AppId,
+		AppSecret: conf.Configs.Wechat.AppSecret,
 	}
 	token, err := wxClient.CodeToToken(code)
 	if err != nil {
@@ -61,14 +61,14 @@ func WxSession_Get(context *gin.Context) {
 		panic(err)
 	}
 
-	wxAccount := &models.WxAccount{OpenId: userInfo.OpenId, AppId: pkg.Configs.Wechat.AppId}
+	wxAccount := &models.WxAccount{OpenId: userInfo.OpenId, AppId: conf.Configs.Wechat.AppId}
 	has, err := models.X.Get(wxAccount)
 	if err != nil {
 		panic(err)
 	}
 
 	now := time.Now()
-	randStr := randomUtils.String(32)
+	randStr := random.String(32)
 	if !has {
 		// insert to db
 		wxAccount.UnionId = userInfo.UnionId
@@ -83,7 +83,7 @@ func WxSession_Get(context *gin.Context) {
 		wxAccount.Created = now
 
 		if len(wxAccount.Avatar) < 1 {
-			wxAccount.Avatar = pkg.Configs.Wechat.DefaultAvatar
+			wxAccount.Avatar = conf.Configs.Wechat.DefaultAvatar
 		}
 
 		id, _ := models.X.Insert(wxAccount)
@@ -95,13 +95,13 @@ func WxSession_Get(context *gin.Context) {
 	tokenStr := base64.StdEncoding.EncodeToString([]byte(key))
 	out := models.TokenOut{
 		Token:    tokenStr,
-		Expirein: pkg.Configs.App.TokenExpiredSeconds,
-		Expireat: now.Add(time.Duration(pkg.Configs.App.TokenExpiredSeconds) * time.Second),
+		Expirein: conf.Configs.App.TokenExpiredSeconds,
+		Expireat: now.Add(time.Duration(conf.Configs.App.TokenExpiredSeconds) * time.Second),
 	}
 
 	// delay 30s for network
 	accountTokenKey := fmt.Sprintf(constants.RedisAccountTokenF, randStr)
-	redisUtils.Set(accountTokenKey, wxAccount, pkg.Configs.App.TokenExpiredSeconds+30)
+	redisUtils.Set(accountTokenKey, wxAccount, conf.Configs.App.TokenExpiredSeconds+30)
 
 	login := &models.Login{
 		WxAccountId: wxAccount.Id,
@@ -117,7 +117,7 @@ func logLogin(login *models.Login) {
 	last := &models.Login{}
 	has, _ := models.X.Where("wx_account_id = ? AND created >= ?",
 		login.WxAccountId,
-		login.Created.Add(-time.Duration(pkg.Configs.App.TokenExpiredSeconds)*time.Second)).
+		login.Created.Add(-time.Duration(conf.Configs.App.TokenExpiredSeconds)*time.Second)).
 		Desc("id", "created").
 		Get(last)
 	if has {

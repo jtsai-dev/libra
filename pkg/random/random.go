@@ -6,7 +6,7 @@
  * @LastEditors: yyeiei
  * @LastEditTime: 2019-08-16 16:00:07
  */
-package randomUtils
+package random
 
 import (
 	"math/rand"

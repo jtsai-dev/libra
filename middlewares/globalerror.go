@@ -10,7 +10,7 @@ package middlewares
 
 import (
 	"libra/models"
-	"libra/pkg"
+	"libra/pkg/conf"
 	"libra/pkg/enums"
 
 	"github.com/gin-gonic/gin"
@@ -41,7 +41,7 @@ func GlobalErrorHandle() gin.HandlerFunc {
 					result = models.RCM(enums.Fail, str)
 				} else if code, ok := err.(int); ok {
 					result = models.RC(code)
-				} else if pkg.Configs.Server.RunMode == "debug" {
+				} else if conf.Configs.Server.RunMode == "debug" {
 					if e, ok := err.(error); ok {
 						log.Error("Panic: %v", err)
 						result = models.RCM(enums.Fail, e.Error())

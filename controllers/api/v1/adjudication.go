@@ -16,8 +16,8 @@ import (
 	"libra/models"
 	"libra/models/constants"
 	"libra/pkg/enums"
-	"libra/pkg/jsonUtils"
-	"libra/pkg/randomUtils"
+	"libra/pkg/mapper"
+	"libra/pkg/random"
 
 	"github.com/gin-gonic/gin"
 )
@@ -78,7 +78,7 @@ func Adjudication_Get(context *gin.Context) {
 	models.X.Insert(entity)
 
 	out := &models.AdjudicationOut{}
-	jsonUtils.MapTo(entity, out)
+	mapper.MapTo(entity, out)
 
 	api.WJson(context, out)
 }
@@ -100,10 +100,10 @@ func adjudicate(options []models.Node) models.Node {
 	}
 
 	if sumWeight == 0 {
-		return options[randomUtils.Int(0, count)]
+		return options[random.Int(0, count)]
 	}
 
-	res := maps[randomUtils.Float64WithWeight(weights)]
+	res := maps[random.Float64WithWeight(weights)]
 	return res
 }
 

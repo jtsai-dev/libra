@@ -1,11 +1,3 @@
-/*
- * @Descripttion: 
- * @version: 
- * @Author: yyeiei
- * @Date: 2019-08-12 15:58:39
- * @LastEditors: yyeiei
- * @LastEditTime: 2019-08-12 16:28:43
- */
 package httpUtils
 
 import (
@@ -18,14 +10,14 @@ import (
 
 var defaultHttpClient *http.Client
 
-func instance(){
+func instance() {
 	client := *http.DefaultClient
 	client.Timeout = time.Second * 5
 	defaultHttpClient = &client
 }
 
 func FetchingJson(url string, method string, v interface{}) error {
-	if defaultHttpClient == nil{
+	if defaultHttpClient == nil {
 		instance()
 	}
 
@@ -36,7 +28,6 @@ func FetchingJson(url string, method string, v interface{}) error {
 	if err != nil {
 		return err
 	}
-
 
 	if resp.StatusCode != http.StatusOK {
 		msg := fmt.Sprintf("fail get data with httpCode: %s", resp.StatusCode)

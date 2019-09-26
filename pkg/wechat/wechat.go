@@ -6,7 +6,7 @@
  * @LastEditors: yyeiei
  * @LastEditTime: 2019-08-15 11:39:57
  */
-package wechatUtils
+package wechat
 
 import (
 	"crypto/sha1"
@@ -16,7 +16,7 @@ import (
 
 	"libra/models/constants"
 	"libra/pkg/httpUtils"
-	"libra/pkg/jsonUtils"
+	"libra/pkg/mapper"
 	"libra/pkg/redisUtils"
 
 	"github.com/go-redis/redis"
@@ -46,7 +46,7 @@ func get(url string, v interface{}) (err error) {
 		return errors.New(fmt.Sprintf("%v: %s", errcode, errmsg))
 	}
 
-	err = jsonUtils.MapTo(maps, v)
+	err = mapper.MapTo(maps, v)
 	if err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func (client *Client) GetToken() (token *WxToken, err error) {
 	key := fmt.Sprintf(constants.RedisWxTokenF, client.AppId)
 	json, err := redisUtils.Instance().Get(key).Result()
 	if err != redis.Nil {
-		jsonUtils.ToObject(json, token)
+		mapper.ToObject(json, token)
 		return token, nil
 	}
 

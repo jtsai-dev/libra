@@ -12,7 +12,7 @@ import (
 	"bytes"
 	"strings"
 
-	"libra/pkg/jsonUtils"
+	"libra/pkg/mapper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -50,7 +50,7 @@ func LogHandle() gin.HandlerFunc {
 				in["password"] = "***"
 			}
 
-			str, _ := jsonUtils.ToJson(in)
+			str, _ := mapper.ToJson(in)
 
 			log.Infof("%s %s%s; from: %s; request: %s|%s; response: %s",
 				c.Request.Method, c.Request.Host, c.Request.URL,

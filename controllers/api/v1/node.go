@@ -17,7 +17,7 @@ import (
 	"libra/models"
 	"libra/models/constants"
 	"libra/pkg/enums"
-	"libra/pkg/jsonUtils"
+	"libra/pkg/mapper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -41,7 +41,7 @@ func Node_Get(context *gin.Context) {
 		Find(&entitys)
 
 	out := []models.NodeOut{}
-	jsonUtils.MapTo(entitys, &out)
+	mapper.MapTo(entitys, &out)
 	api.WJson(context, out)
 }
 

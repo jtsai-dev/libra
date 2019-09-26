@@ -1,12 +1,4 @@
-/*
- * @Descripttion: 
- * @version: 
- * @Author: yyeiei
- * @Date: 2019-08-12 14:22:56
- * @LastEditors: yyeiei
- * @LastEditTime: 2019-08-12 16:26:00
- */
-package jsonUtils
+package mapper
 
 import (
 	"encoding/json"
