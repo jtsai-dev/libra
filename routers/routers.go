@@ -43,7 +43,7 @@ func Regist(router *gin.Engine) {
 		apiGroup.POST("wechat", api.Wechat_Post)
 
 		// session
-		apiGroup.GET("wxsession", api.WxSession_Get)
+		apiGroup.POST("wxsession", api.WxSession_Post)
 
 		v1Group := apiGroup.Group("v1", middlewares.AuthHandle())
 		{

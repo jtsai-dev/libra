@@ -46,9 +46,9 @@ type NodePutIn struct {
 }
 
 type NodeOut struct {
-	Id       int64   `binding:"required"`
-	Name     string  `binding:"required"`
-	Parent   int64   `binding:"required"`
-	Weight   float64 `binding:"min=0"`
-	NodeType int     // 1: dir; 2: opt;
+	Id       int64   `json:"id", binding:"required"`
+	Name     string  `json:"name", binding:"required"`
+	Parent   int64   `json:"parent", binding:"required"`
+	Weight   float64 `json:"weight", binding:"min=0"`
+	NodeType int     `json:"nodeType"` // 1: dir; 2: opt;
 }

@@ -79,7 +79,10 @@ func Node_Post(context *gin.Context) {
 	entity.Created = now
 	models.X.Insert(entity)
 
-	api.WJson(context, true)
+	out := models.NodeOut{}
+	mapper.MapTo(entity, &out)
+
+	api.WJson(context, out)
 }
 
 // @Summary modify node
@@ -96,29 +99,21 @@ func Node_Put(context *gin.Context) {
 		return
 	}
 	in.Name = strings.TrimSpace(in.Name)
-	wxAccount := context.MustGet(constants.SessionAccount).(models.WxAccount)
 
-	entity := &models.Node{}
-	has, _ := models.X.
-		Where("id = ? AND wx_account_id = ?", in.Id, wxAccount.Id).
-		Get(entity)
-	if !has {
+	affected, err := models.X.ID(in.Id).Cols("weight, parent, name, updated").Update(&models.Node{
+		Weight:  in.Weight,
+		Parent:  in.Parent,
+		Name:    in.Name,
+		Updated: time.Now(),
+	})
+	if err != nil {
+		api.WJsonCodeMsg(context, enums.Fail, err.Error())
+		return
+	}
+	if affected < 1 {
 		api.WJsonCode(context, enums.DataBlank)
 		return
 	}
-
-	has, _ = models.X.Exist(&models.Node{Name: in.Name, Parent: in.Parent, NodeType: entity.NodeType})
-	if has {
-		api.WJsonCode(context, enums.DataRepeat)
-		return
-	}
-
-	now := time.Now()
-	entity.Weight = in.Weight
-	entity.Parent = in.Parent
-	entity.Name = in.Name
-	entity.Updated = now
-	models.X.Update(entity)
 
 	api.WJson(context, true)
 }
@@ -138,15 +133,18 @@ func Node_Delete(context *gin.Context) {
 	}
 
 	id, _ := strconv.ParseInt(idStr, 10, 64)
-	entity := &models.Node{
-		Id: id,
-	}
 
-	has, _ := models.X.ID(id).Get(entity)
-	if has {
-		entity.Status = enums.Deleted
-		entity.Deleted = time.Now()
-		models.X.Update(entity)
+	affected, err := models.X.ID(id).Cols("status, deleted").Update(&models.Node{
+		Status:  enums.Deleted,
+		Deleted: time.Now(),
+	})
+	if err != nil {
+		api.WJsonCodeMsg(context, enums.Fail, err.Error())
+		return
+	}
+	if affected < 1 {
+		api.WJsonCode(context, enums.DataBlank)
+		return
 	}
 
 	api.WJson(context, true)

@@ -23,6 +23,7 @@ import (
 	"libra/pkg/wechat"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 // @Summary get WxSession
@@ -30,9 +31,13 @@ import (
 // @Produce json
 // Param code query {string} true "code"
 // @Success 200 {object} models.TokenOut
-// @Router /api/wxseession [get]
-func WxSession_Get(context *gin.Context) {
-	code := context.Query("code")
+// @Router /api/wxsession [post]
+func WxSession_Post(context *gin.Context) {
+	var in map[string]string
+	if err := context.ShouldBindBodyWith(&in, binding.JSON); err != nil {
+		panic(enums.ParamsError)
+	}
+	code, _ := in["code"]
 	if len(code) < 1 {
 		panic(enums.ParamsInvalid)
 	}
@@ -94,6 +99,8 @@ func WxSession_Get(context *gin.Context) {
 	key := fmt.Sprintf("%d.%s.%s", wxAccount.Id, wxAccount.NickName, randStr)
 	tokenStr := base64.StdEncoding.EncodeToString([]byte(key))
 	out := models.TokenOut{
+		NickName: wxAccount.NickName,
+		Avatar:   wxAccount.Avatar,
 		Token:    tokenStr,
 		Expirein: conf.Configs.App.TokenExpiredSeconds,
 		Expireat: now.Add(time.Duration(conf.Configs.App.TokenExpiredSeconds) * time.Second),

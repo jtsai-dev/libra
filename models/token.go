@@ -18,6 +18,8 @@ type TokenInfo struct {
 }
 
 type TokenOut struct {
+	NickName string    `json:"nickName"`
+	Avatar   string    `json:"avatar"`
 	Token    string    `json:"token"`
 	Expireat time.Time `json:"expireat"`
 	Expirein int       `json:"expirein"`
