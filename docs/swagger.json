@@ -183,7 +183,8 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "boolean"
+                            "type": "object",
+                            "$ref": "#/definitions/models.Result"
                         }
                     }
                 }
@@ -255,8 +256,8 @@
                 }
             }
         },
-        "/api/wxseession": {
-            "get": {
+        "/api/wxsession": {
+            "post": {
                 "produces": [
                     "application/json"
                 ],
@@ -388,6 +389,12 @@
                     "type": "integer"
                 },
                 "token": {
+                    "type": "string"
+                },
+                "nickName": {
+                    "type": "string"
+                },
+                "avatar": {
                     "type": "string"
                 }
             }

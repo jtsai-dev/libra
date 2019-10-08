@@ -198,7 +198,8 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "boolean"
+                            "type": "object",
+                            "$ref": "#/definitions/models.Result"
                         }
                     }
                 }
@@ -270,8 +271,8 @@ var doc = `{
                 }
             }
         },
-        "/api/wxseession": {
-            "get": {
+        "/api/wxsession": {
+            "post": {
                 "produces": [
                     "application/json"
                 ],
@@ -404,6 +405,12 @@ var doc = `{
                 },
                 "token": {
                     "type": "string"
+                },
+                "nickName": {
+                    "type": "string"
+                },
+                "avatar": {
+                    "type": "string"
                 }
             }
         }
@@ -420,13 +427,13 @@ type swaggerInfo struct {
 }
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
-var SwaggerInfo = swaggerInfo{ Schemes: []string{}}
+var SwaggerInfo = swaggerInfo{Schemes: []string{}}
 
 type s struct{}
 
 func (s *s) ReadDoc() string {
 	t, err := template.New("swagger_info").Funcs(template.FuncMap{
-		"marshal": func(v interface {}) string {
+		"marshal": func(v interface{}) string {
 			a, _ := json.Marshal(v)
 			return string(a)
 		},
